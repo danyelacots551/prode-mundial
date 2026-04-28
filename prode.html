@@ -130,7 +130,7 @@ async function guardarPrediccion() {
   if (!nombre) { alert("Ingresá tu nombre"); return; }
 
   const btn = document.getElementById("btn-guardar");
-  btn.textContent = "⏳ Guardando...";
+  btn.textContent = "❤️ ¡Guardaste tu predicción, crotis!";
   btn.disabled = true;
 
   const rows = partidos.map((p, i) => ({
@@ -154,7 +154,7 @@ async function guardarPrediccion() {
   });
 
   document.getElementById("msg-ok").style.display = "block";
-  btn.textContent ="❤️ ¡Guardaste tu predicción, crotis!";";
+  btn.textContent = "✅ Guardado";
   setTimeout(() => {
     btn.textContent = "⚽ Guardar predicción";
     btn.disabled = false;
