@@ -7,41 +7,40 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #f0f4f8; color: #1a1a1a; font-family: Arial, sans-serif; }
-  .header { background: #0a3161; padding: 20px; text-align: center; }
-  .header h1 { color: #ffffff; font-size: 22px; }
-  .header h1 span.rojo { color: #bf0a30; }
-  .header h1 span.verde { color: #006847; }
-  .header p { color: #ccddee; font-size: 13px; }
-  .seccion { padding: 20px; }
+  .header { background: linear-gradient(160deg, #0a3161 0%, #bf0a30 60%, #006847 100%); padding: 30px 20px; text-align: center; }
+  .header h1 { color: #ffffff; font-size: 28px; letter-spacing: 3px; }
+  .header p { color: #ccddee; font-size: 12px; letter-spacing: 1px; margin-top: 8px; }
+  .seccion { padding: 20px; padding-bottom: 140px; }
   .card { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-  input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; background: #f8f8f8; color: #333; font-size: 15px; margin-top: 8px; }
-  .partido-card { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #0a3161; }
+  input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; background: #f8f8f8; color: #333; font-size: 15px; margin-top: 8px; }
+  .partido-card { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #0a3161; position: relative; }
   .partido-info { font-size: 11px; color: #bf0a30; margin-bottom: 8px; font-weight: bold; }
   .equipos { display: flex; align-items: center; justify-content: space-between; }
   .equipo { text-align: center; flex: 1; }
   .equipo-nombre { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #0a3161; }
   .goles-input { width: 60px; padding: 10px; text-align: center; border-radius: 8px; border: 2px solid #0a3161; background: #f0f4f8; color: #0a3161; font-size: 20px; font-weight: bold; }
   .vs { color: #bf0a30; font-size: 16px; font-weight: bold; padding: 0 10px; }
-  .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-  .btn-verde { background: #006847; color: white; }
-  .btn-azul { background: #0a3161; color: white; }
+  .btn-flotante { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); width: 90%; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; background: #006847; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; }
+  .btn-azul { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; background: #0a3161; color: white; }
   .nav { display: flex; background: #0a3161; border-top: 3px solid #bf0a30; position: fixed; bottom: 0; width: 100%; }
   .nav-btn { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-size: 12px; color: #aaccee; border: none; background: none; }
   .nav-btn.active { color: #bf0a30; font-weight: bold; }
-  .pantalla { display: none; padding-bottom: 70px; }
+  .pantalla { display: none; }
   .pantalla.activa { display: block; }
   .ranking-item { display: flex; align-items: center; background: #ffffff; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
   .pos { font-size: 20px; font-weight: bold; color: #bf0a30; width: 40px; }
   .nombre-ranking { flex: 1; font-size: 15px; color: #0a3161; font-weight: bold; }
   .pts { font-size: 18px; font-weight: bold; color: #006847; }
-  .msg { text-align: center; padding: 15px; color: #006847; font-weight: bold; display: none; background: #e8f5e9; border-radius: 8px; margin-top: 10px; }
+  .msg { text-align: center; padding: 15px; color: #006847; font-weight: bold; display: none; background: #e8f5e9; border-radius: 8px; margin-top: 10px; font-size: 18px; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>⚽ <span class="rojo">PRODE</span> MUNDIAL <span class="verde">2026</span></h1>
-  <p>🇺🇸 USA · 🇨🇦 Canadá · 🇲🇽 México</p>
+  <div style="font-size:50px; margin-bottom:8px;">⚽</div>
+  <h1>PRODE <span style="color:#ff6b6b;">MUNDIAL</span> <span style="color:#4cff91;">2026</span></h1>
+  <div style="margin-top:10px; font-size:24px;">🇺🇸 &nbsp; 🇨🇦 &nbsp; 🇲🇽</div>
+  <p>USA · CANADÁ · MÉXICO</p>
 </div>
 
 <div class="pantalla activa" id="pantalla-prode">
@@ -51,8 +50,7 @@
       <input type="text" id="nombre" placeholder="Ingresá tu nombre">
     </div>
     <div id="partidos-lista"></div>
-    <div class="msg" id="msg-ok">✓ Predicción guardada!</div>
-    <button class="btn btn-verde" onclick="guardarPrediccion()">Guardar predicción</button>
+    <div class="msg" id="msg-ok">❤️ ¡Guardaste tu predicción, crotis!</div>
   </div>
 </div>
 
@@ -60,9 +58,11 @@
   <div class="seccion">
     <h2 style="margin-bottom:15px; color:#0a3161;">🏆 Tabla de posiciones</h2>
     <div id="ranking-lista"></div>
-    <button class="btn btn-azul" onclick="cargarRanking()">Actualizar ranking</button>
+    <button class="btn-azul" onclick="cargarRanking()">Actualizar ranking</button>
   </div>
 </div>
+
+<button class="btn-flotante" id="btn-guardar" onclick="guardarPrediccion()">⚽ Guardar predicción</button>
 
 <div class="nav">
   <button class="nav-btn active" onclick="mostrar(\'prode\', this)">⚽ Prode</button>
@@ -108,7 +108,7 @@ const partidos = [
 function renderPartidos() {
   const lista = document.getElementById("partidos-lista");
   lista.innerHTML = partidos.map((p, i) => `
-    <div class="partido-card">
+    <div class="partido-card" id="card-${i}">
       <div class="partido-info">${p.grupo}</div>
       <div class="equipos">
         <div class="equipo">
@@ -128,18 +128,38 @@ function renderPartidos() {
 async function guardarPrediccion() {
   const nombre = document.getElementById("nombre").value;
   if (!nombre) { alert("Ingresá tu nombre"); return; }
-  for (let i = 0; i < partidos.length; i++) {
-    const p = partidos[i];
-    const local = document.getElementById("local-" + i).value;
-    const visita = document.getElementById("visita-" + i).value;
-    await fetch(API, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({data: {jugador: nombre, partido: p.local + " vs " + p.visita, prediccion_local: local, prediccion_visitante: visita, puntos: "0"}})
-    });
-  }
+
+  const btn = document.getElementById("btn-guardar");
+  btn.textContent = "⏳ Guardando...";
+  btn.disabled = true;
+
+  const rows = partidos.map((p, i) => ({
+    jugador: nombre,
+    partido: p.local + " vs " + p.visita,
+    prediccion_local: document.getElementById("local-" + i).value,
+    prediccion_visitante: document.getElementById("visita-" + i).value,
+    puntos: "0"
+  }));
+
+  await fetch(API, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({data: rows})
+  });
+
+  partidos.forEach((p, i) => {
+    const card = document.getElementById("card-" + i);
+    card.style.borderLeft = "4px solid #006847";
+    card.style.background = "#f0fff4";
+  });
+
   document.getElementById("msg-ok").style.display = "block";
-  setTimeout(() => document.getElementById("msg-ok").style.display = "none", 3000);
+  btn.textContent = "✅ Guardado";
+  setTimeout(() => {
+    btn.textContent = "⚽ Guardar predicción";
+    btn.disabled = false;
+    document.getElementById("msg-ok").style.display = "none";
+  }, 4000);
 }
 
 async function cargarRanking() {
@@ -166,6 +186,7 @@ function mostrar(pantalla, btn) {
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   document.getElementById("pantalla-" + pantalla).classList.add("activa");
   btn.classList.add("active");
+  document.getElementById("btn-guardar").style.display = pantalla === "prode" ? "block" : "none";
 }
 
 renderPartidos();
