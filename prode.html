@@ -7,32 +7,32 @@
 <title>Prode Mundial 2026</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #1a1a2e; color: white; font-family: Arial, sans-serif; }
-  .header { background: #16213e; padding: 20px; text-align: center; }
-  .header h1 { color: #e94560; font-size: 22px; }
-  .header p { color: #aaa; font-size: 13px; }
+  body { background: #f0f4f8; color: #1a1a1a; font-family: Arial, sans-serif; }
+  .header { background: #ffffff; padding: 20px; text-align: center; }
+  .header h1 { color: #ffffff; font-size: 22px; }
+  .header p { color: #ccddee; font-size: 13px; }
   .seccion { padding: 20px; }
-  .card { background: #16213e; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
-  input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0f3460; color: white; font-size: 15px; margin-top: 8px; }
-  .partido-card { background: #16213e; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
-  .partido-info { font-size: 11px; color: #e94560; margin-bottom: 8px; }
+  .card { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+  input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #e8f0fe; color: #333; font-size: 15px; margin-top: 8px; }
+  .partido-card { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+  .partido-info { font-size: 11px; color: #bf0a30; margin-bottom: 8px; }
   .equipos { display: flex; align-items: center; justify-content: space-between; }
   .equipo { text-align: center; flex: 1; }
   .equipo-nombre { font-size: 13px; font-weight: bold; margin-bottom: 5px; }
-  .goles-input { width: 60px; padding: 10px; text-align: center; border-radius: 8px; border: 1px solid #444; background: #0f3460; color: white; font-size: 20px; font-weight: bold; }
+  .goles-input { width: 60px; padding: 10px; text-align: center; border-radius: 8px; border: 1px solid #444; background: #e8f0fe; color: #1a1a1a; font-size: 20px; font-weight: bold; }
   .vs { color: #aaa; font-size: 16px; padding: 0 10px; }
   .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-  .btn-verde { background: #4caf50; color: white; }
-  .btn-azul { background: #2196f3; color: white; }
-  .nav { display: flex; background: #16213e; border-top: 1px solid #333; position: fixed; bottom: 0; width: 100%; }
+  .btn-verde { background: #006847; color: #1a1a1a; }
+  .btn-azul { background: #0a3161; color: #1a1a1a; }
+  .nav { display: flex; background: #ffffff; border-top: 1px solid #333; position: fixed; bottom: 0; width: 100%; }
   .nav-btn { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-size: 12px; color: #aaa; border: none; background: none; }
-  .nav-btn.active { color: #e94560; }
+  .nav-btn.active { color: #bf0a30; }
   .pantalla { display: none; padding-bottom: 70px; }
   .pantalla.activa { display: block; }
-  .ranking-item { display: flex; align-items: center; background: #16213e; border-radius: 10px; padding: 15px; margin-bottom: 10px; }
-  .pos { font-size: 20px; font-weight: bold; color: #e94560; width: 30px; }
+  .ranking-item { display: flex; align-items: center; background: #ffffff; border-radius: 10px; padding: 15px; margin-bottom: 10px; }
+  .pos { font-size: 20px; font-weight: bold; color: #bf0a30; width: 30px; }
   .nombre-ranking { flex: 1; font-size: 15px; }
-  .pts { font-size: 18px; font-weight: bold; color: #4caf50; }
+  .pts { font-size: 18px; font-weight: bold; color: #006847; }
   .msg { text-align: center; padding: 15px; color: #4caf50; font-weight: bold; display: none; }
 </style>
 </head>
@@ -74,6 +74,12 @@
 <script>
 const API = "https://sheetdb.io/api/v1/uixeuifqayh6d";
 
+const banderas = {
+  "México": "🇲🇽", "Sudáfrica": "🇿🇦", "Corea del Sur": "🇰🇷", "Rep. Checa": "🇨🇿",
+  "Canadá": "🇨🇦", "Qatar": "🇶🇦", "Suiza": "🇨🇭", "Bosnia": "🇧🇦",
+  "Argentina": "🇦🇷", "Argelia": "🇩🇿", "Austria": "🇦🇹", "Jordania": "🇯🇴"
+};
+
 const partidos = [
   {grupo: "Grupo A", local: "México", visita: "Sudáfrica"},
   {grupo: "Grupo A", local: "Corea del Sur", visita: "Rep. Checa"},
@@ -100,12 +106,12 @@ function renderPartidos() {
       <div class="partido-info">${p.grupo}</div>
       <div class="equipos">
         <div class="equipo">
-          <div class="equipo-nombre">${p.local}</div>
+          <div class="equipo-nombre">${banderas[p.local] || ""} ${p.local}</div>
           <input class="goles-input" type="number" min="0" value="0" id="local-${i}">
         </div>
         <div class="vs">VS</div>
         <div class="equipo">
-          <div class="equipo-nombre">${p.visita}</div>
+          <div class="equipo-nombre">${banderas[p.visita] || ""} ${p.visita}</div>
           <input class="goles-input" type="number" min="0" value="0" id="visita-${i}">
         </div>
       </div>
