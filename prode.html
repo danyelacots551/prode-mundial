@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prode Mundial 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: white; font-family: Arial, sans-serif; }
+  .header { background: #16213e; padding: 20px; text-align: center; }
+  .header h1 { color: #e94560; font-size: 22px; }
+  .header p { color: #aaa; font-size: 13px; }
+  .seccion { padding: 20px; }
+  .card { background: #16213e; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+  input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0f3460; color: white; font-size: 15px; margin-top: 8px; }
+  .partido-card { background: #16213e; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+  .partido-info { font-size: 11px; color: #e94560; margin-bottom: 8px; }
+  .equipos { display: flex; align-items: center; justify-content: space-between; }
+  .equipo { text-align: center; flex: 1; }
+  .equipo-nombre { font-size: 13px; font-weight: bold; margin-bottom: 5px; }
+  .goles-input { width: 60px; padding: 10px; text-align: center; border-radius: 8px; border: 1px solid #444; background: #0f3460; color: white; font-size: 20px; font-weight: bold; }
+  .vs { color: #aaa; font-size: 16px; padding: 0 10px; }
+  .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+  .btn-verde { background: #4caf50; color: white; }
+  .btn-azul { background: #2196f3; color: white; }
+  .nav { display: flex; background: #16213e; border-top: 1px solid #333; position: fixed; bottom: 0; width: 100%; }
+  .nav-btn { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-size: 12px; color: #aaa; border: none; background: none; }
+  .nav-btn.active { color: #e94560; }
+  .pantalla { display: none; padding-bottom: 70px; }
+  .pantalla.activa { display: block; }
+  .ranking-item { display: flex; align-items: center; background: #16213e; border-radius: 10px; padding: 15px; margin-bottom: 10px; }
+  .pos { font-size: 20px; font-weight: bold; color: #e94560; width: 30px; }
+  .nombre-ranking { flex: 1; font-size: 15px; }
+  .pts { font-size: 18px; font-weight: bold; color: #4caf50; }
+  .msg { text-align: center; padding: 15px; color: #4caf50; font-weight: bold; display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚽ Prode Mundial 2026</h1>
+  <p>USA · México · Canadá</p>
+</div>
+
+<!-- PANTALLA 1: PREDICCIONES -->
+<div class="pantalla activa" id="pantalla-prode">
+  <div class="seccion">
+    <div class="card">
+      <label>Tu nombre</label>
+      <input type="text" id="nombre" placeholder="Ingresá tu nombre">
+    </div>
+
+    <div id="partidos-lista"></div>
+    <div class="msg" id="msg-ok">✓ Predicción guardada!</div>
+    <button class="btn btn-verde" onclick="guardarPrediccion()">Guardar predicción</button>
+  </div>
+</div>
+
+<!-- PANTALLA 2: RANKING -->
+<div class="pantalla" id="pantalla-ranking">
+  <div class="seccion">
+    <h2 style="margin-bottom:15px;">🏆 Tabla de posiciones</h2>
+    <div id="ranking-lista"></div>
+    <button class="btn btn-azul" onclick="cargarRanking()">Actualizar</button>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="mostrar('prode', this)">⚽ Prode</button>
+  <button class="nav-btn" onclick="mostrar('ranking', this); cargarRanking()">🏆 Ranking</button>
+</div>
+
+<script>
+const API = "https://sheetdb.io/api/v1/uixeuifqayh6d";
+
+const partidos = [
+  {grupo: "Grupo A", local: "México", visita: "Sudáfrica"},
+  {grupo: "Grupo A", local: "Corea del Sur", visita: "Rep. Checa"},
+  {grupo: "Grupo A", local: "México", visita: "Corea del Sur"},
+  {grupo: "Grupo A", local: "Sudáfrica", visita: "Rep. Checa"},
+  {grupo: "Grupo A", local: "México", visita: "Rep. Checa"},
+  {grupo: "Grupo A", local: "Sudáfrica", visita: "Corea del Sur"},
+  {grupo: "Grupo B", local: "Canadá", visita: "Qatar"},
+  {grupo: "Grupo B", local: "Suiza", visita: "Bosnia"},
+  {grupo: "Grupo B", local: "Canadá", visita: "Suiza"},
+  {grupo: "Grupo B", local: "Qatar", visita: "Bosnia"},
+  {grupo: "Grupo I", local: "Argentina", visita: "Argelia"},
+  {grupo: "Grupo I", local: "Austria", visita: "Jordania"},
+  {grupo: "Grupo I", local: "Argentina", visita: "Austria"},
+  {grupo: "Grupo I", local: "Argelia", visita: "Jordania"},
+  {grupo: "Grupo I", local: "Argentina", visita: "Jordania"},
+  {grupo: "Grupo I", local: "Argelia", visita: "Austria"},
+];
+
+function renderPartidos() {
+  const lista = document.getElementById("partidos-lista");
+  lista.innerHTML = partidos.map((p, i) => `
+    <div class="partido-card">
+      <div class="partido-info">${p.grupo}</div>
+      <div class="equipos">
+        <div class="equipo">
+          <div class="equipo-nombre">${p.local}</div>
+          <input class="goles-input" type="number" min="0" value="0" id="local-${i}">
+        </div>
+        <div class="vs">VS</div>
+        <div class="equipo">
+          <div class="equipo-nombre">${p.visita}</div>
+          <input class="goles-input" type="number" min="0" value="0" id="visita-${i}">
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function guardarPrediccion() {
+  const nombre = document.getElementById("nombre").value;
+  if (!nombre) { alert("Ingresá tu nombre"); return; }
+  
+  for (let i = 0; i < partidos.length; i++) {
+    const p = partidos[i];
+    const local = document.getElementById("local-" + i).value;
+    const visita = document.getElementById("visita-" + i).value;
+    await fetch(API, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({data: {jugador: nombre, partido: p.local + " vs " + p.visita, prediccion_local: local, prediccion_visitante: visita, puntos: "0"}})
+    });
+  }
+  
+  document.getElementById("msg-ok").style.display = "block";
+  setTimeout(() => document.getElementById("msg-ok").style.display = "none", 3000);
+}
+
+async function cargarRanking() {
+  const res = await fetch(API);
+  const data = await res.json();
+  
+  const totales = {};
+  data.forEach(r => {
+    if (!totales[r.jugador]) totales[r.jugador] = 0;
+    totales[r.jugador] += parseInt(r.puntos) || 0;
+  });
+  
+  const sorted = Object.entries(totales).sort((a,b) => b[1]-a[1]);
+  const medals = ["🥇","🥈","🥉"];
+  
+  document.getElementById("ranking-lista").innerHTML = sorted.map((r, i) => `
+    <div class="ranking-item">
+      <div class="pos">${medals[i] || (i+1)}</div>
+      <div class="nombre-ranking">${r[0]}</div>
+      <div class="pts">${r[1]} pts</div>
+    </div>
+  `).join("");
+}
+
+function mostrar(pantalla, btn) {
+  document.querySelectorAll(".pantalla").forEach(p => p.classList.remove("activa"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("pantalla-" + pantalla).classList.add("activa");
+  btn.classList.add("active");
+}
+
+renderPartidos();
+</script>
+</body>
+</html>
